@@ -78,7 +78,7 @@ jobs:
           docker push ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/backend:${GITHUB_SHA}
       - name: Update kebeconfig to access EKS
         run:
-          aws eks update-kubeconfig --name cluster-pro4 --region us-east-1
+          aws eks update-kubeconfig --name cluster --region us-east-1
       - name: Deploy to Kubernetes
         run:
           cd ./starter/backend/k8s &&
