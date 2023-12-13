@@ -10,7 +10,7 @@ on:
     branches:
       - main
 
-  # Scheduled trigger at 4:30 AM UTC, Monday through Friday
+  # Scheduled trigger at 4:30 AM UTC, weekday
   schedule:
     - cron: '30 4 * * 1-5'
   
@@ -46,12 +46,12 @@ jobs:
     steps:
       - name: Checkout Repository Code
         uses: actions/checkout@v3
-      - name: Set up Node.js 
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: latest
       - name: Setup Credentials for AWS resources
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
