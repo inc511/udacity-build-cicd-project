@@ -1,0 +1,83 @@
+# Workflow Configuration
+name: ThanhND Backend CI Workflow
+
+on:
+  # Manual trigger using the workflow_dispatch event
+  workflow_dispatch:
+      
+  # Automatic trigger on pull request events targeting the main branch
+  push:
+    branches:
+      - main
+      
+  # Scheduled trigger at 5:00 AM UTC, Monday through Friday
+  schedule:
+    - cron: '0 5 * * 1-5'
+
+jobs:
+  lint-job:
+    name: Lint Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code from repository
+        uses: actions/checkout@v3
+      - name: Set up Node.js 
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - name: Restore the Cache to speed up execution
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      - name: Install Dependencies
+        run:
+          echo Start &&
+          cd ./starter/backend &&
+          python -m pip install --upgrade pip &&
+          pip install pipenv &&
+          pipenv install --dev
+      - name: Run Lint
+        run: cd ./starter/backend && pipenv run lint
+
+  test-job:
+    name: Test Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Code from Repository
+        uses: actions/checkout@v3
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - name: Restore the Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      - name: Install Needed Dependencies
+        run:
+          cd ./starter/backend &&
+          python -m pip install --upgrade pip &&
+          pip install pipenv && 
+          pipenv install pytest --dev && 
+          pipenv install --dev
+      - name: Run Test
+        run: cd ./starter/backend && pipenv run test
+
+  build-job:
+    name: Build Job
+    needs: [lint-job, test-job]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish Test Results for Later Investigate
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test-results.xml
+      - name: Check Out Code
+        uses: actions/checkout@v3
+      - name: Build Docker Image
+        run: |
+          cd ./starter/backend
+          docker build -t backend .
