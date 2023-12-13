@@ -1,5 +1,5 @@
 # Workflow Configuration
-name: Frontend CD Workflows
+name: ThanhND Frontend CD Workflows
 
 on:
   # Manual trigger using the workflow_dispatch event
