@@ -6,13 +6,13 @@ on:
   workflow_dispatch:
       
   # Automatic trigger on pull request events targeting the main branch
-  push:
+  pull_request:
     branches:
       - main
       
-  # Scheduled trigger at 5:00 AM UTC, Monday through Friday
+  # Scheduled trigger at 4:30 AM UTC, weekday
   schedule:
-    - cron: '0 5 * * 1-5'
+    - cron: '30 4 * * 1-5'
 
 jobs:
   lint-job:
