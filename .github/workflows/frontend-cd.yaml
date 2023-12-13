@@ -62,7 +62,7 @@ jobs:
           access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region: us-east-1
-      - name: Build Docker image
+      - name: Build Docker images
         run: |
           cd ./starter/frontend
           echo ${{ vars.REACT_APP_MOVIE_API_URL }}
