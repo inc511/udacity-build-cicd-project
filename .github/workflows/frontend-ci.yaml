@@ -1,0 +1,31 @@
+# Workflow Configuration
+name: Frontend CI Workflow
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 5 * * 1-5'
+
+jobs:
+  lint-job:
+    name: Lint Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Set up Node.js 
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - name: Restore Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      - name: Install Dependencies
+        run: cd ./starter/frontend && npm install
+      - name: Run Lint
+        run: cd ./starter/frontend && npm run lint 
